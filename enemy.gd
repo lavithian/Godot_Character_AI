@@ -8,7 +8,7 @@ const lunge_speed : float = 10.0
 var in_range : bool = false
 var hit_enemy : int = 1
 var current_state = state.MOVE
-
+const damage : int = 10
 
 enum state {
 	MOVE,
@@ -75,7 +75,7 @@ func lunge_player():
 
 func attack_player():
 	# attack player
-	print("Attack!")
+	#print("Attack!")
 	current_state = state.MOVE
 	pass
 
