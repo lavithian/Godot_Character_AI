@@ -15,11 +15,11 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tu372"]
 size = Vector3(100, 0.1, 100)
 
-[node name="level" type="Node3D" node_paths=PackedStringArray("player", "ui", "bullet")]
+[node name="level" type="Node3D" node_paths=PackedStringArray("bullet", "player", "ui")]
 script = ExtResource("1_gljcp")
+bullet = NodePath("bullet")
 player = NodePath("Player")
 ui = NodePath("UI")
-bullet = NodePath("bullet")
 
 [node name="floor" type="StaticBody3D" parent="."]
 metadata/_edit_group_ = true
@@ -67,7 +67,7 @@ collision_mask = 3
 player = NodePath("../Player")
 
 [node name="bullet" parent="." instance=ExtResource("4_f72sh")]
-transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 10.1132, 0)
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, -11.7117, 0)
 
 [node name="Camera_rig" parent="." instance=ExtResource("4_fbpvo")]
 
