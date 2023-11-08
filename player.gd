@@ -42,8 +42,9 @@ func _physics_process(delta) -> void:
 	
 	velocity.x = input.x * speed * delta
 	velocity.z = input.z * speed * delta
-	
+
 	move_and_slide()
+	#print("Player's position: ", position)
 	pass
 	
 func _unhandled_input(event: InputEvent) -> void:
