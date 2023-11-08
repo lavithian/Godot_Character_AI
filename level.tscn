@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://krrfjmqcxf2"]
+[gd_scene load_steps=13 format=3 uid="uid://krrfjmqcxf2"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_gljcp"]
 [ext_resource type="PackedScene" uid="uid://fvicijhswq6n" path="res://player.tscn" id="2_1fldc"]
@@ -8,12 +8,118 @@
 [ext_resource type="PackedScene" uid="uid://klkys0ppqky" path="res://start_menu.tscn" id="6_txc7p"]
 [ext_resource type="PackedScene" uid="uid://cayrqs6t8cxe3" path="res://ui.tscn" id="6_waf8j"]
 [ext_resource type="PackedScene" uid="uid://dusd8pdsmuoeg" path="res://restart_menu.tscn" id="7_53sgr"]
+[ext_resource type="PackedScene" uid="uid://c640s67yi8a7c" path="res://enemy_ranged_01.tscn" id="9_hvprd"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ye5jh"]
 size = Vector2(100, 100)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tu372"]
 size = Vector3(100, 0.1, 100)
+
+[sub_resource type="GDScript" id="GDScript_xk0da"]
+script/source = "extends CharacterBody3D
+
+@export var player : Node3D
+
+const speed = 5.0
+const orbit_speed : float = 3.0
+const lunge_speed : float = 10.0
+var in_range : bool = false
+var hit_enemy : int = 1
+var current_state = state.MOVE
+const damage : int = 10
+
+enum state {
+	MOVE,
+	ORBIT,
+	LUNGE,
+	ATTACK
+}
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
+
+func _physics_process(delta):
+	#print(\"Current state: \" + name + ' ' + str(current_state))
+	
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+		
+	if player:
+		if is_on_floor():
+			match current_state: 
+				state.MOVE:
+					move_to_player()
+				state.ORBIT:
+					orbit_player()
+				state.LUNGE:
+					lunge_player()
+				state.ATTACK:
+					attack_player()
+	move_and_slide()
+
+func move_to_player():
+	look_at(player.global_position)
+	var direction = global_position.direction_to(player.global_position)
+	if direction:
+		velocity = direction * speed
+		
+func orbit_player():
+	var direction = (global_transform.origin - player.global_transform.origin).normalized()
+	var orbit_direction = Vector3(
+		0,
+		hit_enemy,
+		0
+	).cross(direction).normalized()
+	velocity = orbit_direction * orbit_speed
+	look_at(player.global_transform.origin, Vector3.UP)
+
+func lunge_player():
+	# make a lunge at the player
+	velocity.x = 0
+	velocity.z = 0
+#	print(\"Lunge!\")
+	await get_tree().create_timer(1).timeout
+	var direction = global_position.direction_to(player.global_position)
+	if direction:
+		velocity = direction * lunge_speed
+	await get_tree().create_timer(1).timeout
+	velocity.x = 0
+	velocity.z = 0
+	if in_range:
+		current_state = state.ATTACK
+	else:
+		current_state = state.MOVE
+
+func attack_player():
+	# attack player
+	#print(\"Attack!\")
+	current_state = state.MOVE
+	pass
+
+func _on_area_3d_body_entered(body):
+	#print(\"Enemy Enter: \" + str(body))
+	if body.name == \"Player\":
+		in_range = true
+	current_state = state.ORBIT
+
+func _on_area_3d_body_exited(body):
+	if body.name == \"Player\":
+		in_range = false
+	current_state = state.MOVE
+
+func _on_area_3d_area_entered(area):
+	if area.collision_layer == 8:
+		hit_enemy = -hit_enemy
+
+func _on_timer_timeout():
+	var rng = RandomNumberGenerator.new().randi_range(0, 4)
+	if rng == 3:
+		if current_state == state.ORBIT:
+			current_state = state.LUNGE
+	pass # Replace with function body.
+"
 
 [node name="level" type="Node3D" node_paths=PackedStringArray("bullet", "player", "ui")]
 script = ExtResource("1_gljcp")
@@ -32,6 +138,10 @@ shape = SubResource("BoxShape3D_tu372")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
+
+[node name="enemy_ranged_01" parent="." instance=ExtResource("9_hvprd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15051, -22.5838)
+script = SubResource("GDScript_xk0da")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1132, 5, -5.92611)

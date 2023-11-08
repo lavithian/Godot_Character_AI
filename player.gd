@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
 @export var enemy : CharacterBody3D
+@export var enemy_ranged_01 : CharacterBody3D
 @export var bullet : PackedScene
 @export var camera : Marker3D
 @onready var camera_camera =camera.get_node("Camera")

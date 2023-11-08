@@ -1,7 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c3o4ox6imk8nq"]
-
-[sub_resource type="GDScript" id="GDScript_gq57f"]
-script/source = "extends CharacterBody3D
+extends CharacterBody3D
 
 @export var player : Node3D
 
@@ -21,10 +18,10 @@ enum state {
 }
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _physics_process(delta):
-	#print(\"Current state: \" + name + ' ' + str(current_state))
+	#print("Current state: " + name + ' ' + str(current_state))
 	
 	# Add the gravity.
 	if not is_on_floor():
@@ -63,7 +60,7 @@ func lunge_player():
 	# make a lunge at the player
 	velocity.x = 0
 	velocity.z = 0
-#	print(\"Lunge!\")
+#	print("Lunge!")
 	await get_tree().create_timer(1).timeout
 	var direction = global_position.direction_to(player.global_position)
 	if direction:
@@ -78,18 +75,18 @@ func lunge_player():
 
 func attack_player():
 	# attack player
-	#print(\"Attack!\")
+	#print("Attack!")
 	current_state = state.MOVE
 	pass
 
 func _on_area_3d_body_entered(body):
-	#print(\"Enemy Enter: \" + str(body))
-	if body.name == \"Player\":
+	#print("Enemy Enter: " + str(body))
+	if body.name == "Player":
 		in_range = true
 	current_state = state.ORBIT
 
 func _on_area_3d_body_exited(body):
-	if body.name == \"Player\":
+	if body.name == "Player":
 		in_range = false
 	current_state = state.MOVE
 
@@ -103,40 +100,3 @@ func _on_timer_timeout():
 		if current_state == state.ORBIT:
 			current_state = state.LUNGE
 	pass # Replace with function body.
-"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqmwu"]
-albedo_color = Color(1, 0, 0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_n0cta"]
-material = SubResource("StandardMaterial3D_sqmwu")
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_x8ubr"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_7sxc2"]
-
-[node name="Enemy" type="CharacterBody3D"]
-collision_layer = 2
-script = SubResource("GDScript_gq57f")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_n0cta")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_x8ubr")
-
-[node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
-collision_layer = 8
-collision_mask = 10
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-shape = SubResource("SphereShape3D_7sxc2")
-
-[node name="Timer" type="Timer" parent="."]
-autostart = true
-
-[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
