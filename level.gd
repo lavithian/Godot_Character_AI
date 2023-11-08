@@ -14,5 +14,6 @@ func _input(event):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
 
-func instantiate_bullet():
+func instantiate_bullet(start_pos, start_dir) -> void :
+	print("pew pew")
 	pass

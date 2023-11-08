@@ -6,7 +6,7 @@ extends CharacterBody3D
 @onready var camera_camera =camera.get_node("Camera")
 @onready var cursor = $Cursor
 @onready var eyes = $eyes
-@onready var level : Node3D
+@export var level : Node3D
 
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
@@ -86,15 +86,14 @@ func look_at_cursor():
 	look_at(cursor_pos, Vector3.UP)
 	pass
 
+
 func shoot_weapon() -> void:
-	print("pew pew")
 #	var b = bullet.instantiate()
 #	dd_child(b)
 #	b.global_transform.origin = eyes.global_transform.origin
 
 # Assuming 'world_node' is a path or reference to the node with the instantiate_bullet function.
-	get_().instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
-
+	level.instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
 
 
 	pass

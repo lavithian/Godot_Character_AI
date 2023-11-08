@@ -33,13 +33,14 @@ collision_layer = 4
 collision_mask = 3
 player = NodePath("../Player")
 
-[node name="Player" parent="." node_paths=PackedStringArray("enemy", "camera") instance=ExtResource("2_1fldc")]
+[node name="Player" parent="." node_paths=PackedStringArray("enemy", "camera", "level") instance=ExtResource("2_1fldc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15051, 0)
 collision_layer = 2
 collision_mask = 5
 enemy = NodePath("../Enemy")
 bullet = ExtResource("4_f72sh")
 camera = NodePath("../Camera_rig")
+level = NodePath("..")
 
 [node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
 transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 5.89497, 0)
