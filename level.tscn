@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=3 uid="uid://krrfjmqcxf2"]
+
+[ext_resource type="Script" path="res://level.gd" id="1_gljcp"]
+[ext_resource type="PackedScene" uid="uid://fvicijhswq6n" path="res://player.tscn" id="2_1fldc"]
+[ext_resource type="PackedScene" uid="uid://c3o4ox6imk8nq" path="res://enemy.tscn" id="3_1ku1r"]
+[ext_resource type="PackedScene" uid="uid://cagi2702q4b71" path="res://bullet.tscn" id="4_f72sh"]
+[ext_resource type="PackedScene" uid="uid://rfso6t3wpke8" path="res://camera_rig.tscn" id="4_fbpvo"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ye5jh"]
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tu372"]
+size = Vector3(100, 0.1, 100)
+
+[node name="level" type="Node3D"]
+script = ExtResource("1_gljcp")
+
+[node name="floor" type="StaticBody3D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+mesh = SubResource("PlaneMesh_ye5jh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+shape = SubResource("BoxShape3D_tu372")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
+
+[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1132, 5, -5.92611)
+collision_layer = 4
+collision_mask = 3
+player = NodePath("../Player")
+
+[node name="Player" parent="." node_paths=PackedStringArray("enemy", "bullet", "camera") instance=ExtResource("2_1fldc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15051, 0)
+collision_layer = 2
+collision_mask = 5
+enemy = NodePath("../Enemy")
+bullet = NodePath("../bullet")
+camera = NodePath("../Camera_rig")
+
+[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
+transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 5.89497, 0)
+collision_layer = 4
+collision_mask = 3
+player = NodePath("../Player")
+
+[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
+transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 8.19763, 12.162)
+collision_layer = 4
+collision_mask = 3
+player = NodePath("../Player")
+
+[node name="Enemy4" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
+transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 8.63247, -20.9892)
+collision_layer = 4
+collision_mask = 3
+player = NodePath("../Player")
+
+[node name="bullet" parent="." instance=ExtResource("4_f72sh")]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-07, -10, 0, 10, -4.37114e-07, 0, 10.1132, 0)
+visible = false
+
+[node name="Camera_rig" parent="." instance=ExtResource("4_fbpvo")]
