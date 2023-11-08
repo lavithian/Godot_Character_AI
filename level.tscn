@@ -15,10 +15,11 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tu372"]
 size = Vector3(100, 0.1, 100)
 
-[node name="level" type="Node3D" node_paths=PackedStringArray("player", "ui")]
+[node name="level" type="Node3D" node_paths=PackedStringArray("player", "ui", "bullet")]
 script = ExtResource("1_gljcp")
 player = NodePath("Player")
 ui = NodePath("UI")
+bullet = NodePath("bullet")
 
 [node name="floor" type="StaticBody3D" parent="."]
 metadata/_edit_group_ = true
@@ -38,13 +39,14 @@ collision_layer = 4
 collision_mask = 3
 player = NodePath("../Player")
 
-[node name="Player" parent="." node_paths=PackedStringArray("enemy", "camera") instance=ExtResource("2_1fldc")]
+[node name="Player" parent="." node_paths=PackedStringArray("enemy", "camera", "level") instance=ExtResource("2_1fldc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15051, 0)
 collision_layer = 2
 collision_mask = 5
 enemy = NodePath("../Enemy")
 bullet = ExtResource("4_f72sh")
 camera = NodePath("../Camera_rig")
+level = NodePath("..")
 
 [node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
 transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 5.89497, 0)
@@ -65,8 +67,7 @@ collision_mask = 3
 player = NodePath("../Player")
 
 [node name="bullet" parent="." instance=ExtResource("4_f72sh")]
-transform = Transform3D(10, 0, 0, 0, -4.37114e-07, -10, 0, 10, -4.37114e-07, 0, 10.1132, 0)
-visible = false
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 10.1132, 0)
 
 [node name="Camera_rig" parent="." instance=ExtResource("4_fbpvo")]
 
