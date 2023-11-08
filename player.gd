@@ -6,7 +6,6 @@ extends CharacterBody3D
 @onready var camera_camera =camera.get_node("Camera")
 @onready var cursor = $Cursor
 @onready var eyes = $eyes
-@onready var ui_node = $UI
 
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
@@ -21,11 +20,10 @@ signal health_changed(current_health, max_health)
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
-	take_damage(10)
+	health_changed.emit(player_health, 100)
 	pass
 
 func _physics_process(delta) -> void:
-
 	camera_follows_player()
 #	camera_rotation()
 	look_at_cursor()
@@ -50,10 +48,10 @@ func _physics_process(delta) -> void:
 	move_and_slide()
 	pass
 	
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		camera_input = -event.relative.x * mouse_sensitiviy
-	pass
+#func _unhandled_input(event: InputEvent) -> void:
+#	if event is InputEventMouseMotion:
+#		camera_input = -event.relative.x * mouse_sensitiviy
+#	pass
 	
 func camera_follows_player() -> void:
 	var player_pos = global_transform.origin
@@ -90,41 +88,33 @@ func take_damage(amount) -> void:
 		player_death()
 	pass
 
-func player_death() -> void:
-	print("Player died")
+func restart() -> void:
+	print("Restart!")
+	health_changed.emit(100, 100)
 	pass
+
+func player_death() -> void:
+	print("Player died :(")
+	get_tree().change_scene_to_file("res://restart_menu.tscn")
+	pass
+
 # Only detects other Areas. Might be useful
 func _on_area_3d_area_entered(area) -> void:
-	if area:
-		print("Enter: " + str(area))
-	else:
-		print("Nothing enter")
 	pass
 
 func _on_area_3d_area_exited(area) -> void:
-	if area:
-		print("Exit: " + str(area))
-	else:
-		print("Nothing exit")
 	pass
 
 # detects Bodies
 func _on_area_3d_body_entered(body) -> void:
-	if body:
-		print("Enter: " + str(body.collision_layer))
-		#print("Enter: " + str(body))
-		#if body == enemy:
-		#	print("Enemy entered the field")
-	else:
-		print("Nothing enter")
+	if body.collision_layer == 4:
+		print("Ouch")
+		take_damage(body.damage)
 	pass
 
 func _on_area_3d_body_exited(body) -> void:
-	if body:
-		# print("Exit: " + str(body))
-		print("Exit: " + str(body.collision_layer))
-		#if body == enemy && body.collision_layer == 3:
-		#	print("Enemy exited the field")
-	else:
-		print("Nothing exit")
 	pass
+
+func _on_restart_menu_restart():
+	restart()
+	pass # Replace with function body.

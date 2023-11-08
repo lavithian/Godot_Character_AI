@@ -8,7 +8,7 @@ const lunge_speed : float = 10.0
 var in_range : bool = false
 var hit_enemy : int = 1
 var current_state = state.MOVE
-
+const damage : int = 10
 
 enum state {
 	MOVE,
