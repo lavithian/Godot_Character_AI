@@ -19,6 +19,11 @@ func instantiate_bullet(start_pos, start_dir) -> void :
 	print("pew pew")
 	if bullet:
 		var bullet_instance = bullet.duplicate()
+		add_child(bullet_instance)
+		bullet_instance.global_transform.origin = start_pos
+		bullet_instance.rotation = start_dir
+	else:
+		push_error("bullet node unset")
 	
 	
 	pass
