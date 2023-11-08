@@ -75,7 +75,7 @@ func lunge_player():
 
 func attack_player():
 	# attack player
-	print("Attack!")
+	#print("Attack!")
 	current_state = state.MOVE
 	pass
 

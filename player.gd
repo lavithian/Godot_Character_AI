@@ -6,18 +6,22 @@ extends CharacterBody3D
 @onready var camera_camera =camera.get_node("Camera")
 @onready var cursor = $Cursor
 @onready var eyes = $eyes
-@onready var level : Node3D
+@onready var ui_node = $UI
 
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
 var movement_velocity: Vector3
 var camera_input : float = 0.0
 var mouse_sensitiviy : float = 0.01
+var player_health : int = 100
+
+signal health_changed(current_health, max_health)
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
+	take_damage(10)
 	pass
 
 func _physics_process(delta) -> void:
@@ -56,18 +60,6 @@ func camera_follows_player() -> void:
 	camera.global_transform.origin = player_pos
 	pass
 
-func camera_rotation() -> void:
-	#rotate_x(camera_input[0])
-	rotate_y(camera_input)
-#    camera.rotation.x = clamp(
-#        pitch_pivot.rotation.x,
-#        deg_to_rad(-30),S
-#        deg_to_rad(30)
-#    )
-#    twist_input = 0.0
-#    pitch_input = 0.0
-	pass
-
 func look_at_cursor():
 	# Create a horizontal plane, and find a point where the ray intersects with it
 	var player_pos = global_transform.origin
@@ -88,17 +80,19 @@ func look_at_cursor():
 
 func shoot_weapon() -> void:
 	print("pew pew")
-#	var b = bullet.instantiate()
-#	dd_child(b)
-#	b.global_transform.origin = eyes.global_transform.origin
-
-# Assuming 'world_node' is a path or reference to the node with the instantiate_bullet function.
-	get_().instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
-
-
-
 	pass
 
+func take_damage(amount) -> void:
+	print("Damage: " + str(amount))
+	player_health -= amount
+	health_changed.emit(player_health, 100)
+	if player_health < 1:
+		player_death()
+	pass
+
+func player_death() -> void:
+	print("Player died")
+	pass
 # Only detects other Areas. Might be useful
 func _on_area_3d_area_entered(area) -> void:
 	if area:
