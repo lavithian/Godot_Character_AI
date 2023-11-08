@@ -94,8 +94,6 @@ func shoot_weapon() -> void:
 
 # Assuming 'world_node' is a path or reference to the node with the instantiate_bullet function.
 	level.instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
-
-
 	pass
 
 # Only detects other Areas. Might be useful

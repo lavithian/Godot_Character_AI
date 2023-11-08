@@ -1,4 +1,5 @@
 extends Node3D
+@export var bullet: Area3D
 
 
 # Called when the node enters the scene tree for the first time.
@@ -16,4 +17,8 @@ func _input(event):
 
 func instantiate_bullet(start_pos, start_dir) -> void :
 	print("pew pew")
+	if bullet:
+		var bullet_instance = bullet.duplicate()
+	
+	
 	pass

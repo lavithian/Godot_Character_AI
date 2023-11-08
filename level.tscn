@@ -12,8 +12,9 @@ size = Vector2(100, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tu372"]
 size = Vector3(100, 0.1, 100)
 
-[node name="level" type="Node3D"]
+[node name="level" type="Node3D" node_paths=PackedStringArray("bullet")]
 script = ExtResource("1_gljcp")
+bullet = NodePath("bullet")
 
 [node name="floor" type="StaticBody3D" parent="."]
 metadata/_edit_group_ = true
