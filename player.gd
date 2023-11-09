@@ -9,6 +9,9 @@ extends CharacterBody3D
 @onready var eyes = $eyes
 @export var level : Node3D
 
+var bullet_2 = load("res://bullet_2.tscn")
+var instance
+@onready var bullet_source = $BulletSource
 
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
@@ -87,8 +90,14 @@ func shoot_weapon() -> void:
 #	b.global_transform.origin = eyes.global_transform.origin
 
 # Assuming 'world_node' is a path or reference to the node with the instantiate_bullet function.
-	level.instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
+	#level.instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
 	print("pew pew")
+	
+	#youtube video source.
+	instance = bullet_2.instantiate()
+	instance.position = bullet_source.global_position
+	instance.transform.basis = bullet_source.global_transform.basis
+	get_parent().add_child(instance)
 	pass
 
 func take_damage(amount) -> void:

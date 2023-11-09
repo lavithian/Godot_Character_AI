@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://krrfjmqcxf2"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_gljcp"]
+[ext_resource type="PackedScene" uid="uid://cai6qiox06qj5" path="res://camera_rig2.tscn" id="2_0gj42"]
 [ext_resource type="PackedScene" uid="uid://fvicijhswq6n" path="res://player.tscn" id="2_1fldc"]
 [ext_resource type="PackedScene" uid="uid://c3o4ox6imk8nq" path="res://enemy.tscn" id="3_1ku1r"]
 [ext_resource type="PackedScene" uid="uid://cagi2702q4b71" path="res://bullet.tscn" id="4_f72sh"]
-[ext_resource type="PackedScene" uid="uid://rfso6t3wpke8" path="res://camera_rig.tscn" id="4_fbpvo"]
 [ext_resource type="PackedScene" uid="uid://klkys0ppqky" path="res://start_menu.tscn" id="6_txc7p"]
 [ext_resource type="PackedScene" uid="uid://cayrqs6t8cxe3" path="res://ui.tscn" id="6_waf8j"]
 [ext_resource type="PackedScene" uid="uid://dusd8pdsmuoeg" path="res://restart_menu.tscn" id="7_53sgr"]
@@ -179,7 +179,7 @@ player = NodePath("../Player")
 [node name="bullet" parent="." instance=ExtResource("4_f72sh")]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, -11.7117, 0)
 
-[node name="Camera_rig" parent="." instance=ExtResource("4_fbpvo")]
+[node name="Camera_rig" parent="." instance=ExtResource("2_0gj42")]
 
 [node name="Screens" type="Control" parent="."]
 layout_mode = 3
