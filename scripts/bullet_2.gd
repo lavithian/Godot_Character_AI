@@ -24,7 +24,6 @@ func _process(delta):
 			if (ray.get_collider() && ray.get_collider().name == "Enemy") :
 				print ("Wahoo!")
 				ray.get_collider().health -= 10
-				#ray.get_collider().health = 50
 				mesh.visible = false
 				particles.emitting = true
 				await get_tree().create_timer(1.0).timeout
