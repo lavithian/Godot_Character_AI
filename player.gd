@@ -14,7 +14,9 @@ extends CharacterBody3D
 var bullet_2 = load("res://bullet_2.tscn")
 var instance
 @onready var bullet_source = $BulletSource
+@onready var bullet_source2 = $BulletSource2
 
+var flipflop : bool
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
 var movement_velocity: Vector3
@@ -29,6 +31,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
 	health_changed.emit(player_health, 100)
+	flipflop = false
 	pass
 
 func _physics_process(delta) -> void:
@@ -99,8 +102,14 @@ func shoot_weapon() -> void:
 	
 	#youtube video source.
 	instance = bullet_2.instantiate()
-	instance.position = bullet_source.global_position
-	instance.transform.basis = bullet_source.global_transform.basis
+	if (flipflop) :
+		instance.position = bullet_source.global_position
+		instance.transform.basis = bullet_source.global_transform.basis
+		flipflop = false
+	else : 
+		instance.position = bullet_source2.global_position
+		instance.transform.basis = bullet_source2.global_transform.basis
+		flipflop = true
 	get_parent().add_child(instance)
 	pass
 

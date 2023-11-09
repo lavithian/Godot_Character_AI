@@ -21,7 +21,7 @@ func _process(delta):
 		if ray.get_collider() :
 			if ray.get_collider().name :
 				print (format_string % ray.get_collider().name)
-			if (ray.get_collider() && ray.get_collider().name == "Enemy") :
+			if (ray.get_collider() && ray.get_collider().name.begins_with("Enemy")) :
 				print ("Wahoo!")
 				ray.get_collider().health -= 10
 				mesh.visible = false

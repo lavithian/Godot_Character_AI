@@ -54,7 +54,11 @@ visible = false
 mesh = SubResource("SphereMesh_h4v8n")
 
 [node name="BulletSource" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.30184, -0.614163)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.302, -0.158207)
+target_position = Vector3(0, 0, -1)
+
+[node name="BulletSource2" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.302, -0.158207)
 target_position = Vector3(0, 0, -1)
 
 [node name="test" parent="." instance=ExtResource("2_x3dmx")]
@@ -62,7 +66,7 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.00407314, -1.67044, 
 top_level = true
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.05
 
 [connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
 [connection signal="area_exited" from="Area3D" to="." method="_on_area_3d_area_exited"]

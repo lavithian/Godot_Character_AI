@@ -74,7 +74,6 @@ layout_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
 m_enemy = NodePath("../Enemy")
 m_scene = NodePath("..")
-spawn_interval = 2.0
 m_player = NodePath("../Player")
 m_camera = NodePath("../Camera_rig")
 
