@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var enemy : CharacterBody3D
 @export var bullet : PackedScene
 @export var camera : Marker3D
-@onready var camera_camera =camera.get_node("Camera")
+@onready var camera_camera = camera.get_node("Camera")
 @onready var cursor = $Cursor
 @onready var eyes = $eyes
 @export var level : Node3D
