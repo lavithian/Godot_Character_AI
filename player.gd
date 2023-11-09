@@ -58,8 +58,6 @@ func _physics_process(delta) -> void:
 			#shoot_weapon()
 	elif Input.is_action_just_released("shoot"):
 		shootTimer.stop()
-	
-	
 	pass
 	
 #func _unhandled_input(event: InputEvent) -> void:

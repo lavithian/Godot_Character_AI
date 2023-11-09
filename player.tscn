@@ -50,6 +50,7 @@ mesh = SubResource("BoxMesh_sy5ef")
 
 [node name="Cursor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00407314, -1.67044, 0.00129485)
+visible = false
 mesh = SubResource("SphereMesh_h4v8n")
 
 [node name="BulletSource" type="RayCast3D" parent="."]
