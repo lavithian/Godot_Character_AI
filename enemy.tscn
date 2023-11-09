@@ -18,7 +18,8 @@ const damage : int = 10
 var health : int
 var is_init : bool
 
-enum state {
+enum state
+{
 	MOVE,
 	ORBIT,
 	LUNGE,
