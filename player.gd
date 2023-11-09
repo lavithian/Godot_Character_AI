@@ -6,7 +6,9 @@ extends CharacterBody3D
 @export var camera : Marker3D
 @onready var camera_camera =camera.get_node("Camera")
 @onready var cursor = $Cursor
+@onready var test = $test
 @onready var eyes = $eyes
+@onready var shootTimer = $Timer
 @export var level : Node3D
 
 var bullet_2 = load("res://bullet_2.tscn")
@@ -41,10 +43,7 @@ func _physics_process(delta) -> void:
 	# Handle Jump.
 	if Input.is_action_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
-	
-	if Input.is_action_just_pressed("shoot"):
-		shoot_weapon()
-	
+
 	input.x = Input.get_axis("move_left", "move_right")
 	input.z = Input.get_axis("move_forward", "move_back")
 	
@@ -53,6 +52,14 @@ func _physics_process(delta) -> void:
 
 	move_and_slide()
 	#print("Player's position: ", position)
+	if Input.is_action_just_pressed("shoot"):
+		if (shootTimer.is_stopped()) :
+			shootTimer.start()
+			#shoot_weapon()
+	elif Input.is_action_just_released("shoot"):
+		shootTimer.stop()
+	
+	
 	pass
 	
 #func _unhandled_input(event: InputEvent) -> void:
@@ -77,12 +84,11 @@ func look_at_cursor():
 	var cursor_pos = dropPlane.intersects_ray(from,to)
 	
 	# Set the position of cursor visualizer
-	cursor.global_transform.origin = cursor_pos + Vector3(0,1,0)
-	
-	# Make player look at the cursor
-	look_at(cursor_pos, Vector3.UP)
+	if (cursor_pos) :
+		cursor.global_transform.origin = cursor_pos + Vector3(0,1,0)
+		test.global_transform.origin = cursor_pos + Vector3(0, 1, 0)
+		look_at(cursor_pos, Vector3.UP)
 	pass
-
 
 func shoot_weapon() -> void:
 #	var b = bullet.instantiate()
@@ -137,4 +143,8 @@ func _on_area_3d_body_exited(body) -> void:
 
 func _on_restart_menu_restart():
 	restart()
+	pass # Replace with function body.
+
+func _on_timer_timeout():
+	shoot_weapon()
 	pass # Replace with function body.
