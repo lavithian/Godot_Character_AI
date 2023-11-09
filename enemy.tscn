@@ -16,7 +16,7 @@ var hit_enemy : int = 1
 var current_state = state.MOVE
 const damage : int = 10
 var health : int
-@export var is_init : bool
+var is_init : bool
 
 enum state {
 	MOVE,
