@@ -8,7 +8,6 @@ extends CharacterBody3D
 @onready var eyes = $eyes
 @export var level : Node3D
 
-
 const speed : float = 1000.0
 const jump_velocity : float = 4.5
 var movement_velocity: Vector3
