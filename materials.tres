@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="materials" load_steps=2 format=3 uid="uid://gx1j0mf83ff3"]
+
+[ext_resource type="Script" path="res://materials.gd" id="1_cylee"]
+
+[resource]
+script = ExtResource("1_cylee")
+lumber = 0
+stone = 0

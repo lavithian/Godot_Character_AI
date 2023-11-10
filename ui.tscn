@@ -15,3 +15,11 @@ offset_bottom = 40.0
 
 [node name="PlayerHealth" type="ProgressBar" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="Lumber" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Lumber: 0"
+
+[node name="Stone" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Stone: 0"
