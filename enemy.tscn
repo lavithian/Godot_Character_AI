@@ -57,9 +57,8 @@ func _physics_process(delta) :
 		move_and_slide()
 		healthBar.scale.y = health * 0.01
 		if (camera) :
-			var camera_pos = camera.transform.origin
-			camera_pos.y = 0
-			healthBar.look_at(camera_pos, Vector3(0, 1, 0))
+			var direction = (global_transform.origin - camera.global_transform.origin).normalized()
+			healthBar.look_at(direction, Vector3(1, 0, 0))
 		else :
 			print (\"camera resource not set\")
 	pass
@@ -84,12 +83,11 @@ func lunge_player():
 	# make a lunge at the player
 	velocity.x = 0
 	velocity.z = 0
-#	print(\"Lunge!\")
+	#print(\"Lunge!\")
 	await get_tree().create_timer(1).timeout
 	var direction = global_position.direction_to(player.global_position)
 	if direction:
 		velocity = direction * lunge_speed
-	await get_tree().create_timer(1).timeout
 	velocity.x = 0
 	velocity.z = 0
 	if in_range:
@@ -151,10 +149,12 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 
 [node name="Enemy" type="CharacterBody3D"]
-collision_layer = 2
+collision_layer = 3
+collision_mask = 3
 script = SubResource("GDScript_gq57f")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 3
 mesh = SubResource("SphereMesh_n0cta")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -178,6 +178,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_qo3a3")
 
 [node name="Red" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.9, 0, 0, 0, -3.93403e-08, -0.9, 0, 0.9, -3.93403e-08, 0, 1.099, 0)
+visible = false
 mesh = SubResource("CapsuleMesh_wqg18")
 surface_material_override/0 = SubResource("StandardMaterial3D_581ni")
 
