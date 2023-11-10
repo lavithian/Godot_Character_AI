@@ -2,6 +2,7 @@ extends Node3D
 @export var bullet: Area3D
 @export var player : CharacterBody3D
 @export var ui : Control
+@export var materials : Resource
 #@export var start_menu : Control
 var myrot: Vector3
 var numEnemies: int
@@ -10,7 +11,13 @@ var numEnemies: int
 func _ready():
 	numEnemies = 1
 	myrot = Vector3.ZERO
-	pass # Replace with function body.
+	$Screens/StartMenu.queue_free()
+	print(materials)
+	print(materials.lumber)
+	print(materials.stone)
+	# Stops the restart menu
+	# $Screens/RestartMenu.set_process_input(false)
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -37,5 +44,18 @@ func _on_player_health_changed(health, max_health):
 	ui.get_child(0).get_child(0).value = health
 	pass
 
+func _on_podrick_health_changed(current_health, max_health):
+	ui.get_child(0).get_child(0).value = current_health
+	pass
 
 
+func _on_podrick_gain_lumber(amount):
+	materials.gain_lumber(amount)
+	ui.get_child(0).get_child(1).text = "Lumber: " + str(materials.lumber)
+	pass # Replace with function body.
+
+
+func _on_podrick_gain_stone(amount):
+	materials.gain_stone(amount)
+	ui.get_child(0).get_child(2).text = "Stone: " + str(materials.stone)
+	pass # Replace with function body.

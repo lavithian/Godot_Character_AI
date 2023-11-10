@@ -1,27 +1,28 @@
 extends CharacterBody3D
 
-@export var enemy : CharacterBody3D
-@export var bullet : PackedScene
+@export var stats : Resource
+
 @export var camera : Marker3D
 @onready var camera_camera = camera.get_node("Camera")
 @onready var cursor = $Cursor
-@onready var eyes = $eyes
-@export var level : Node3D
 
-const speed : float = 1000.0
+enum mining_node {
+	TREE,
+	ROCK,
+	NONE
+}
+
+var mining_state = mining_node.NONE
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 const jump_velocity : float = 4.5
-var movement_velocity: Vector3
-var camera_input : float = 0.0
-var mouse_sensitiviy : float = 0.01
-var player_health : int = 100
 
 signal health_changed(current_health, max_health)
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+signal gain_lumber(amount)
+signal gain_stone(amount)
 
 func _ready() -> void:
-	health_changed.emit(player_health, 100)
+	health_changed.emit(stats.max_health, stats.max_health)
+	# initialise_stats()
 	pass
 
 func _physics_process(delta) -> void:
@@ -34,20 +35,15 @@ func _physics_process(delta) -> void:
 		velocity.y -= gravity * delta
 
 	# Handle Jump.
-	if Input.is_action_pressed("jump") and is_on_floor():
-		velocity.y = jump_velocity
-	
-	if Input.is_action_just_pressed("shoot"):
-		shoot_weapon()
-	
+	if Input.is_action_just_released("shoot") and is_on_floor():
+		mine_resources()
+
 	input.x = Input.get_axis("move_left", "move_right")
 	input.z = Input.get_axis("move_forward", "move_back")
-	#print("Player Input x: " + str(input.x))
-	#print("Player Input y: " + str(input.z))
 	
-	velocity.x = input.x * speed * delta
-	velocity.z = input.z * speed * delta
-	#print("Player Velocity: " + str(velocity))
+	velocity.x = input.x * stats.speed * delta
+	velocity.z = input.z * stats.speed * delta
+
 	move_and_slide()
 	#print("Player's position: ", position)
 	pass
@@ -74,53 +70,50 @@ func look_at_cursor():
 	# Make player look at the cursor
 	look_at(cursor_pos, Vector3.UP)
 	pass
-
-
-func shoot_weapon() -> void:
-#	var b = bullet.instantiate()
-#	dd_child(b)
-#	b.global_transform.origin = eyes.global_transform.origin
-
-# Assuming 'world_node' is a path or reference to the node with the instantiate_bullet function.
-	level.instantiate_bullet(global_transform.origin, global_transform.basis.get_euler())
-	print("pew pew")
-	pass
-
+	
 func take_damage(amount) -> void:
 	print("Damage: " + str(amount))
-	player_health -= amount
-	health_changed.emit(player_health, 100)
-	if player_health < 1:
+	stats.health -= amount
+	# health_changed.emit(stat.health, 100)
+	if stats.health < 1:
 		player_death()
 	pass
 
 func restart() -> void:
 	print("Restart!")
-	health_changed.emit(100, 100)
+	# health_changed.emit(100, 100)
 	pass
-
+	
 func player_death() -> void:
 	print("Player died :(")
-	# get_tree().change_scene_to_file("res://restart_menu.tscn")
+	get_tree().change_scene_to_file("res://restart_menu.tscn")
 	pass
 
-# Only detects other Areas. Might be useful
-func _on_area_3d_area_entered(area) -> void:
+func mine_resources():
+	print("mining")
+	if mining_state == mining_node.TREE:
+		#mine tree
+		print("Near a tree!")
+		gain_lumber.emit(1)
+		pass
+	elif mining_state == mining_node.ROCK:
+		#mine rock
+		print("Near a rock!")
+		gain_stone.emit(1)
+		pass
+	# check if it is near a resource node
+	# should send a signal to the level which keeps the resource data
+	# the ui from level should update
 	pass
 
-func _on_area_3d_area_exited(area) -> void:
+func _on_area_3d_body_entered(body):
+	if body.name == "Tree":
+		mining_state = mining_node.TREE
+	elif body.name== "Rock":
+		mining_state = mining_node.ROCK
 	pass
 
-# detects Bodies
-func _on_area_3d_body_entered(body) -> void:
-	if body.collision_layer == 4:
-		print("Ouch")
-		take_damage(body.damage)
-	pass
-
-func _on_area_3d_body_exited(body) -> void:
-	pass
-
-func _on_restart_menu_restart():
-	restart()
+func _on_area_3d_body_exited(body):
+	if (body.name == "Tree" || body.name == "Rock") && mining_state != mining_node.NONE:
+		mining_state = mining_node.NONE
 	pass # Replace with function body.
