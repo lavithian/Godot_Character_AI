@@ -1,13 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://krrfjmqcxf2"]
+[gd_scene load_steps=12 format=3 uid="uid://krrfjmqcxf2"]
 
 [ext_resource type="Script" path="res://level.gd" id="1_gljcp"]
+[ext_resource type="PackedScene" uid="uid://cai6qiox06qj5" path="res://camera_rig2.tscn" id="2_0gj42"]
 [ext_resource type="PackedScene" uid="uid://fvicijhswq6n" path="res://player.tscn" id="2_1fldc"]
 [ext_resource type="PackedScene" uid="uid://c3o4ox6imk8nq" path="res://enemy.tscn" id="3_1ku1r"]
 [ext_resource type="PackedScene" uid="uid://cagi2702q4b71" path="res://bullet.tscn" id="4_f72sh"]
-[ext_resource type="PackedScene" uid="uid://rfso6t3wpke8" path="res://camera_rig.tscn" id="4_fbpvo"]
 [ext_resource type="PackedScene" uid="uid://klkys0ppqky" path="res://start_menu.tscn" id="6_txc7p"]
 [ext_resource type="PackedScene" uid="uid://cayrqs6t8cxe3" path="res://ui.tscn" id="6_waf8j"]
 [ext_resource type="PackedScene" uid="uid://dusd8pdsmuoeg" path="res://restart_menu.tscn" id="7_53sgr"]
+[ext_resource type="PackedScene" uid="uid://bh7mqrn7vnsrt" path="res://enemy_spawner.tscn" id="10_g8q3p"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ye5jh"]
 size = Vector2(100, 100)
@@ -33,11 +34,12 @@ shape = SubResource("BoxShape3D_tu372")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
 
-[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1132, 5, -5.92611)
+[node name="Enemy" parent="." node_paths=PackedStringArray("scene", "player", "camera") instance=ExtResource("3_1ku1r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.8881, -2.71298, -31.5838)
 collision_layer = 4
-collision_mask = 3
+scene = NodePath("..")
 player = NodePath("../Player")
+camera = NodePath("../Camera_rig")
 
 [node name="Player" parent="." node_paths=PackedStringArray("enemy", "camera", "level") instance=ExtResource("2_1fldc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15051, 0)
@@ -48,28 +50,10 @@ bullet = ExtResource("4_f72sh")
 camera = NodePath("../Camera_rig")
 level = NodePath("..")
 
-[node name="Enemy2" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
-transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 5.89497, 0)
-collision_layer = 4
-collision_mask = 3
-player = NodePath("../Player")
-
-[node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
-transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 8.19763, 12.162)
-collision_layer = 4
-collision_mask = 3
-player = NodePath("../Player")
-
-[node name="Enemy4" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_1ku1r")]
-transform = Transform3D(1, 0, 0, 0, 1, -0.000349066, 0, 0.000349066, 1, 30.1561, 8.63247, -20.9892)
-collision_layer = 4
-collision_mask = 3
-player = NodePath("../Player")
-
 [node name="bullet" parent="." instance=ExtResource("4_f72sh")]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, -11.7117, 0)
 
-[node name="Camera_rig" parent="." instance=ExtResource("4_fbpvo")]
+[node name="Camera_rig" parent="." instance=ExtResource("2_0gj42")]
 
 [node name="Screens" type="Control" parent="."]
 layout_mode = 3
@@ -84,6 +68,34 @@ layout_mode = 1
 layout_mode = 1
 
 [node name="UI" parent="." instance=ExtResource("6_waf8j")]
+
+[node name="EnemySpawner" parent="." node_paths=PackedStringArray("m_enemy", "m_scene", "m_player", "m_camera") instance=ExtResource("10_g8q3p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+m_enemy = NodePath("../Enemy")
+m_scene = NodePath("..")
+m_player = NodePath("../Player")
+m_camera = NodePath("../Camera_rig")
+
+[node name="EnemySpawner2" parent="." node_paths=PackedStringArray("m_enemy", "m_scene", "m_player", "m_camera") instance=ExtResource("10_g8q3p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+m_enemy = NodePath("../Enemy")
+m_scene = NodePath("..")
+m_player = NodePath("../Player")
+m_camera = NodePath("../Camera_rig")
+
+[node name="EnemySpawner3" parent="." node_paths=PackedStringArray("m_enemy", "m_scene", "m_player", "m_camera") instance=ExtResource("10_g8q3p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+m_enemy = NodePath("../Enemy")
+m_scene = NodePath("..")
+m_player = NodePath("../Player")
+m_camera = NodePath("../Camera_rig")
+
+[node name="EnemySpawner4" parent="." node_paths=PackedStringArray("m_enemy", "m_scene", "m_player", "m_camera") instance=ExtResource("10_g8q3p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+m_enemy = NodePath("../Enemy")
+m_scene = NodePath("..")
+m_player = NodePath("../Player")
+m_camera = NodePath("../Camera_rig")
 
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="restart" from="Screens/RestartMenu" to="Player" method="_on_restart_menu_restart"]

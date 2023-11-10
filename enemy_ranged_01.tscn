@@ -1,25 +1,19 @@
-[gd_scene load_steps=9 format=3 uid="uid://c3o4ox6imk8nq"]
+[gd_scene load_steps=6 format=3 uid="uid://cxbk7v3di3kd5"]
 
 [sub_resource type="GDScript" id="GDScript_gq57f"]
 script/source = "extends CharacterBody3D
 
-@export var scene : Node3D
 @export var player : Node3D
-@export var camera : Marker3D
-@onready var healthBar = $Green
 
-const speed = 8
+const speed = 5.0
 const orbit_speed : float = 3.0
 const lunge_speed : float = 10.0
 var in_range : bool = false
 var hit_enemy : int = 1
 var current_state = state.MOVE
 const damage : int = 10
-var health : int
-var is_init : bool
 
-enum state
-{
+enum state {
 	MOVE,
 	ORBIT,
 	LUNGE,
@@ -29,39 +23,25 @@ enum state
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
 
-func _ready():
-	is_init = false
-	health = 100
-	pass
-
-func _physics_process(delta) :
+func _physics_process(delta):
+	#print(\"Current state: \" + name + ' ' + str(current_state))
 	
-	if (is_init) :
-		if (health <= 0) :
-			queue_free()
-			scene.numEnemies -= 1
-			pass
-		if not is_on_floor():
-			velocity.y -= gravity * delta
-		if player:
-			if is_on_floor():
-				match current_state: 
-					state.MOVE:
-						move_to_player()
-					state.ORBIT:
-						orbit_player()
-					state.LUNGE:
-						lunge_player()
-					state.ATTACK:
-						attack_player()
-		move_and_slide()
-		healthBar.scale.y = health * 0.01
-		if (camera) :
-			var direction = (global_transform.origin - camera.global_transform.origin).normalized()
-			healthBar.look_at(direction, Vector3(1, 0, 0))
-		else :
-			print (\"camera resource not set\")
-	pass
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+		
+	if player:
+		if is_on_floor():
+			match current_state: 
+				state.MOVE:
+					move_to_player()
+				state.ORBIT:
+					orbit_player()
+				state.LUNGE:
+					lunge_player()
+				state.ATTACK:
+					attack_player()
+	move_and_slide()
 
 func move_to_player():
 	look_at(player.global_position)
@@ -83,11 +63,12 @@ func lunge_player():
 	# make a lunge at the player
 	velocity.x = 0
 	velocity.z = 0
-	#print(\"Lunge!\")
+#	print(\"Lunge!\")
 	await get_tree().create_timer(1).timeout
 	var direction = global_position.direction_to(player.global_position)
 	if direction:
 		velocity = direction * lunge_speed
+	await get_tree().create_timer(1).timeout
 	velocity.x = 0
 	velocity.z = 0
 	if in_range:
@@ -124,65 +105,39 @@ func _on_timer_timeout():
 	pass # Replace with function body.
 "
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqmwu"]
-albedo_color = Color(1, 0, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lo8ds"]
+albedo_color = Color(0.87451, 0.858824, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_n0cta"]
-material = SubResource("StandardMaterial3D_sqmwu")
+material = SubResource("StandardMaterial3D_lo8ds")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_x8ubr"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7sxc2"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_wqg18"]
-radius = 0.1
-height = 1.25
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qo3a3"]
-albedo_color = Color(0.211765, 1, 0.380392, 1)
-emission_enabled = true
-emission = Color(0, 0.886275, 0, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_581ni"]
-albedo_color = Color(0.882353, 0, 0, 1)
-emission_enabled = true
-emission = Color(1, 0, 0, 1)
-
-[node name="Enemy" type="CharacterBody3D"]
-collision_layer = 3
-collision_mask = 3
+[node name="enemy_ranged_01" type="CharacterBody3D"]
+collision_layer = 2
 script = SubResource("GDScript_gq57f")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-layers = 3
 mesh = SubResource("SphereMesh_n0cta")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_x8ubr")
 
-[node name="range" type="Area3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 collision_layer = 8
 collision_mask = 10
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="range"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 shape = SubResource("SphereShape3D_7sxc2")
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
 
-[node name="Green" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.099, 0)
-mesh = SubResource("CapsuleMesh_wqg18")
-surface_material_override/0 = SubResource("StandardMaterial3D_qo3a3")
-
-[node name="Red" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.9, 0, 0, 0, -3.93403e-08, -0.9, 0, 0.9, -3.93403e-08, 0, 1.099, 0)
-visible = false
-mesh = SubResource("CapsuleMesh_wqg18")
-surface_material_override/0 = SubResource("StandardMaterial3D_581ni")
-
-[connection signal="area_entered" from="range" to="." method="_on_area_3d_area_entered"]
-[connection signal="body_entered" from="range" to="." method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="range" to="." method="_on_area_3d_body_exited"]
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

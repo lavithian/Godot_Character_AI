@@ -4,9 +4,11 @@ extends Node3D
 @export var ui : Control
 #@export var start_menu : Control
 var myrot: Vector3
+var numEnemies: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	numEnemies = 1
 	myrot = Vector3.ZERO
 	pass # Replace with function body.
 

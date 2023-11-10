@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://fvicijhswq6n"]
+[gd_scene load_steps=11 format=3 uid="uid://fvicijhswq6n"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_crxy5"]
+[ext_resource type="PackedScene" uid="uid://67bd4urdpvdh" path="res://test.glb" id="2_x3dmx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ko58f"]
 albedo_color = Color(0, 0, 1, 1)
@@ -19,6 +20,7 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("StandardMaterial3D_3utuk")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7y63"]
+transparency = 1
 albedo_color = Color(0, 1, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_h4v8n"]
@@ -48,9 +50,26 @@ mesh = SubResource("BoxMesh_sy5ef")
 
 [node name="Cursor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00407314, -1.67044, 0.00129485)
+visible = false
 mesh = SubResource("SphereMesh_h4v8n")
+
+[node name="BulletSource" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.302, -0.158207)
+target_position = Vector3(0, 0, -1)
+
+[node name="BulletSource2" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, -0.302, -0.158207)
+target_position = Vector3(0, 0, -1)
+
+[node name="test" parent="." instance=ExtResource("2_x3dmx")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.00407314, -1.67044, 0.00129485)
+top_level = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
 
 [connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
 [connection signal="area_exited" from="Area3D" to="." method="_on_area_3d_area_exited"]
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
